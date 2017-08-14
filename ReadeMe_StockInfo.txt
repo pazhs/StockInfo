@@ -1,0 +1,52 @@
+﻿StockInfo
+
+ Schema : allcapz
+ username : reader
+ password : reader_1
+
+-----------------------
+
+tables 
+ - tab_stock_info
+	Columns:
+
+	isin 				varchar(30) 	PK 
+	mclink 				varchar(200) 
+	bse_symbol 			varchar(30) 
+	nse_symbol 			varchar(30) 
+	company_name 			varchar(50) 
+	sector_name 			varchar(75) 
+	ipo 				date 
+	face_value 			double 
+	face_value_update_date 		date 
+	market_cap 			double 
+	bse_sc_group 			varchar(3) 
+	nse_equity_series 		varchar(3)
+
+------------------------
+
+ - tab_stock_mclink
+
+	Columns:
+
+	mclink 				varchar(200) 	PK 
+	update_date 			date
+
+----------------
+
+outline
+
+	 
+	- initially data from MC has been read and all the available "mclinks" have been kept in "tab_stock_mclink"
+	- Data from BSE and NSE bhavcopies are read and the ISIN has been obtained for every trading stock.
+	- the ISINs that have been obtained from bhavcopies are stored in "tab_stock_info"
+	- So initially, "tab_stock_info" tables "mclink" fiels is blank and the table contains only ISINs
+	- Data from "tab_stock_info" has been read and a MAP has been formed
+	- Map<isin, StockInfoBean>
+	- After obtaining the ISINs from the bhavcopies, the first 800 mclinks are read from "tab_stock_mclink" and from those mclinks, data from MC has been obtained(faceValue, company name, sector name and market cap)
+	- This data has been updated to "tab_stock_info"
+	- after this read SET of mclinks are deleted from "tab_stock_mclink" and the new SET has been obtained and this process continues for the remaining mclinks.
+	- some records in "tab_stock_info" may have blank mclinks (152) and some of them are "DVR"s and the trading in these stocks may be avoided(Since the trading volume is very low in DVRs)
+
+
+ - 
